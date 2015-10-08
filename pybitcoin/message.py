@@ -65,13 +65,27 @@ def filer_load(filter=None, n_hash_functions=None, n_tweak=None, n_flags=None):
     fload = {
         "filterload":
             {
-                "filter": filter if filter else "0000000000000000000000000000000000000000000001",
+                "filter": filter if filter else "00",
                 "nHashFunctions": n_hash_functions if n_hash_functions else 1,
-                "nTweak": n_tweak if n_tweak else sha256(str(random.getrandbits(128))).digest().encode("hex")[:8],
+                "nTweak": n_tweak if n_tweak else random.getrandbits(32),
                 "nFlags": n_flags if n_flags else 0
             }
     }
     return fload
+
+
+def filter_add(data):
+    fadd = {
+        "filteradd":
+            {
+                "data": data
+            }
+    }
+    return fadd
+
+
+def filter_clear():
+    return {"filterclear": {}}
 
 
 def inv(type, hash):

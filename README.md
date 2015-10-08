@@ -39,8 +39,5 @@ client.broadcast_tx(tx)
 ## TODO
 This library is not finished. The following things still need to be implemented:
 
-- Set the bloom filter so we can 'subscribe' to an address. `FILTERLOAD` is already implemented, but
-the Murmur3 hash function needs to be ported from java.
-- Set the filter on half the peers at broadcast, push the tx to the other half and listen for `INV` packets containing the tx.
 - Download and store the chain of headers. Requires the `GETBLOCK` message to be implemented and forking logic.
 - Parse and validate the merkle proofs when subscribed to an address.

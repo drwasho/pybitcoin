@@ -49,11 +49,18 @@ def serialize(obj):
         ser.append(bitcoin.num_to_var_int(len(unhexlify(fload["filter"]))))
         ser.append(unhexlify(fload["filter"]))
         ser.append(struct.pack('<L', fload["nHashFunctions"]))
-        ser.append(struct.pack('<L', long(fload["nTweak"], 16)))
+        ser.append(struct.pack('<L', fload["nTweak"]))
         ser.append(struct.pack('B', fload["nFlags"]))
         return "".join(ser)
 
-    elif "inv" in obj:
+    elif "filteradd" in obj:
+        fadd = obj["filteradd"]
+        ser = []
+        ser.append(bitcoin.num_to_var_int(len(unhexlify(fadd["data"]))))
+        ser.append(''.join(reversed(unhexlify(fadd["data"]))))
+        return "".join(ser)
+
+    elif "inv" in obj or "getdata" in obj:
         def encode_type(type):
             if type == "ERROR":
                 return struct.pack('<L', 0)
@@ -63,10 +70,10 @@ def serialize(obj):
                 return struct.pack('<L', 2)
             elif type == "MERKLEBLOCK":
                 return struct.pack('<L', 3)
-        inv = obj["inv"]
+        dict = obj["inv"] if "inv" in obj else obj["getdata"]
         ser = []
-        ser.append(bitcoin.num_to_var_int(len(inv)))
-        for item in inv:
+        ser.append(bitcoin.num_to_var_int(len(dict)))
+        for item in dict:
             ser.append(encode_type(item[0]))
             ser.append(''.join(reversed(unhexlify(item[1]))))
         return "".join(ser)
